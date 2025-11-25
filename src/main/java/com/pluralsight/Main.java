@@ -19,27 +19,36 @@ public class Main {
         ResultSet results =null;
 
         try{
-            System.out.println("What do you want to do?");
-            System.out.println("1) Display all products");
-            System.out.println("2) Display all customers");
-            System.out.println("0) Exit");
-            System.out.println("Select an option:");
-            String option = scanner.nextLine().trim();
+            boolean done = false;
 
-            switch (option){
-                case "1" :
-                    displayAllProducts(username, password, connection, preparedStatement,results);
-                    break;
+            while (!done){
+                System.out.println("\nWhat do you want to do?");
+                System.out.println("1) Display all products");
+                System.out.println("2) Display all customers");
+                System.out.println("0) Exit");
+                System.out.println("Select an option:");
+                String option = scanner.nextLine().trim();
 
-                case "2" :
-                    displayAllCustomers(username, password, connection, preparedStatement,results);
-                    break;
+                switch (option){
+                    case "1" :
+                        displayAllProducts(username, password, connection, preparedStatement,results);
+                        break;
 
-                case "0":
-                    break;
 
-                default:
-                    System.out.println("please enter a valid option.");
+                    case "2" :
+                        displayAllCustomers(username, password, connection, preparedStatement,results);
+                        break;
+
+
+                    case "0":
+                        done = true;
+                        System.out.println("Existing application ...");
+                        break;
+
+                    default:
+                        System.out.println("please enter a valid option.");
+
+                }
 
             }
 
