@@ -151,8 +151,8 @@ public class Main {
 
             results = preparedStatement.executeQuery();
 
-            System.out.println("Contact Name          CompanyName            City       Country     Phone");
-            System.out.println("--------------------- ---------------------- --------   ---------   -----");
+            System.out.println("Contact Name              CompanyName                              City                  Country              Phone");
+            System.out.println("------------------------- ---------------------------------------- -------------------   ------------------   ---------------------");
             while (results.next()) {
                 String contactName = results.getString(1);
                 String companyName = results.getString(2);
@@ -161,8 +161,7 @@ public class Main {
                 String phone = results.getString(5);
 
 
-
-                System.out.printf("%-25s %-30s $%-20s %-20s %-20s\n",
+                System.out.printf("%-25s %-40s $%-20s %-20s %-20s\n",
                         contactName, companyName, city, country, phone);
 
             }
