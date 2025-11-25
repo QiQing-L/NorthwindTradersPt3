@@ -1,5 +1,6 @@
 package com.pluralsight;
 
+import java.sql.*;
 import java.util.Scanner;
 
 public class Main {
@@ -13,6 +14,9 @@ public class Main {
         }
 
         Scanner scanner = new Scanner(System.in);
+        Connection connection =null;
+        PreparedStatement preparedStatement = null;
+        ResultSet results =null;
 
         try{
             System.out.println("What do you want to do?");
@@ -24,11 +28,11 @@ public class Main {
 
             switch (option){
                 case "1" :
-                    displayAllProducts(username, password);
+                    displayAllProducts(username, password, connection, preparedStatement,results);
                     break;
 
                 case "2" :
-                    displayAllCustomers(username, password);
+                    displayAllCustomers(username, password, connection, preparedStatement,results);
                     break;
 
                 case "0":
@@ -38,7 +42,6 @@ public class Main {
                     System.out.println("please enter a valid option.");
 
             }
-
 
 
         } catch (Exception e) {
@@ -53,12 +56,13 @@ public class Main {
 
     }
 
-    public static void displayAllProducts (String username, String password) {
+    public static void displayAllProducts (String username, String password, Connection connection,
+                                           PreparedStatement preparedStatement, ResultSet results) {
         try {
 
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            Connection connection = DriverManager.getConnection(
+            connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/northwind",
                     username,
                     password
@@ -73,9 +77,9 @@ public class Main {
                     ORDER BY ProductID;\s
                     """;
 
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement = connection.prepareStatement(query);
 
-            ResultSet results = preparedStatement.executeQuery();
+            results = preparedStatement.executeQuery();
 
             System.out.println("ID   Name                                Price       Stock");
             System.out.println("---  ---------------------------------   ---------   -----");
@@ -90,61 +94,112 @@ public class Main {
 
             }
 
-            results.close();
-            preparedStatement.close();
-            connection.close();
 
         } catch (Exception e) {
             System.out.println("There's an error! ");
             e.printStackTrace();
+
+        } finally {
+
+            if (results != null) {
+                try{
+                    results.close();
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
+
+            if (preparedStatement != null) {
+                try{
+                    preparedStatement.close();
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
+
+            if (connection != null) {
+                try{
+                    connection.close();
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
+
         }
+
     }
 
-    public static void displayAllCustomers (String username, String password) {
+    public static void displayAllCustomers (String username, String password, Connection connection,
+                                           PreparedStatement preparedStatement, ResultSet results) {
         try {
 
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            Connection connection = DriverManager.getConnection(
+            connection = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/northwind",
                     username,
                     password
             );
 
             String query = """
-                    SELECT ProductID AS `Product ID`,\s
-                    		ProductName AS `Product Name`,\s
-                    		UnitPrice AS `Unit Price`,\s
-                    		UnitsInStock AS `Units In Stock`
-                    FROM products
-                    ORDER BY ProductID;\s
+                    SELECT ContactName, CompanyName, City, Country, Phone
+                    FROM customers
+                    ORDER BY Country;
                     """;
 
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement = connection.prepareStatement(query);
 
-            ResultSet results = preparedStatement.executeQuery();
+            results = preparedStatement.executeQuery();
 
-            System.out.println("ID   Name                                Price       Stock");
-            System.out.println("---  ---------------------------------   ---------   -----");
+            System.out.println("Contact Name          CompanyName            City       Country     Phone");
+            System.out.println("--------------------- ---------------------- --------   ---------   -----");
             while (results.next()) {
-                int productID = results.getInt(1);
-                String productName = results.getString(2);
-                double unitPrice = results.getDouble(3);
-                int unitsInStock = results.getInt(4);
+                String contactName = results.getString(1);
+                String companyName = results.getString(2);
+                String city = results.getString(3);
+                String country = results.getString(4);
+                String phone = results.getString(5);
 
-                System.out.printf("%-4d %-35s $%-10.2f %d\n",
-                        productID, productName, unitPrice, unitsInStock);
+
+
+                System.out.printf("%-25s %-30s $%-20s %-20s %-20s\n",
+                        contactName, companyName, city, country, phone);
 
             }
 
-            results.close();
-            preparedStatement.close();
-            connection.close();
 
         } catch (Exception e) {
             System.out.println("There's an error! ");
             e.printStackTrace();
+
+        } finally {
+
+            if (results != null) {
+                try{
+                    results.close();
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
+
+            if (preparedStatement != null) {
+                try{
+                    preparedStatement.close();
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
+
+            if (connection != null) {
+                try{
+                    connection.close();
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
+
         }
+
     }
 
 }
