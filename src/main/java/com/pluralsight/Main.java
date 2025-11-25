@@ -5,18 +5,16 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        String username = args[0];
-        String password = args[1];
 
         if (args.length != 2) {
             System.out.println("Missing Username and Password to run this application!");
             System.exit(1);
         }
 
+        String username = args[0];
+        String password = args[1];
+
         Scanner scanner = new Scanner(System.in);
-        Connection connection =null;
-        PreparedStatement preparedStatement = null;
-        ResultSet results =null;
 
         try{
             boolean done = false;
@@ -31,12 +29,12 @@ public class Main {
 
                 switch (option){
                     case "1" :
-                        displayAllProducts(username, password, connection, preparedStatement,results);
+                        displayAllProducts(username, password);
                         break;
 
 
                     case "2" :
-                        displayAllCustomers(username, password, connection, preparedStatement,results);
+                        displayAllCustomers(username, password);
                         break;
 
 
@@ -61,12 +59,13 @@ public class Main {
             scanner.close();
         }
 
-
-
     }
 
-    public static void displayAllProducts (String username, String password, Connection connection,
-                                           PreparedStatement preparedStatement, ResultSet results) {
+    public static void displayAllProducts (String username, String password) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet results = null;
+
         try {
 
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -90,8 +89,11 @@ public class Main {
 
             results = preparedStatement.executeQuery();
 
-            System.out.println("ID   Name                                Price       Stock");
-            System.out.println("---  ---------------------------------   ---------   -----");
+            String spacer = "-";
+            System.out.printf("%-4s %-35s %-10s %-9s\n",
+                    "ID", "Name", "Price", "Stock");
+            System.out.println(spacer.repeat(4) + " " + spacer.repeat(35) + " " + spacer.repeat(10)
+                    + " " + spacer.repeat(9));
             while (results.next()) {
                 int productID = results.getInt(1);
                 String productName = results.getString(2);
@@ -138,8 +140,11 @@ public class Main {
 
     }
 
-    public static void displayAllCustomers (String username, String password, Connection connection,
-                                           PreparedStatement preparedStatement, ResultSet results) {
+    public static void displayAllCustomers (String username, String password) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet results = null;
+
         try {
 
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -160,8 +165,11 @@ public class Main {
 
             results = preparedStatement.executeQuery();
 
-            System.out.println("Contact Name              CompanyName                              City                  Country              Phone");
-            System.out.println("------------------------- ---------------------------------------- -------------------   ------------------   ---------------------");
+            String spacer = "-";
+            System.out.printf("%-25s %-40s %-20s %-20s %-20s\n",
+                    "Contact Name", "Company Name", "City", "Country", "Phone");
+            System.out.println(spacer.repeat(25) + " " + spacer.repeat(40) + " " + spacer.repeat(20)
+                    + " " + spacer.repeat(20)+ " " + spacer.repeat(20));
             while (results.next()) {
                 String contactName = results.getString(1);
                 String companyName = results.getString(2);
@@ -170,7 +178,7 @@ public class Main {
                 String phone = results.getString(5);
 
 
-                System.out.printf("%-25s %-40s $%-20s %-20s %-20s\n",
+                System.out.printf("%-25s %-40s %-20s %-20s %-20s\n",
                         contactName, companyName, city, country, phone);
 
             }
